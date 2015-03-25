@@ -50,7 +50,7 @@
         ],
         'AddUser' => [
             'httpMethod' => 'POST',
-            'uri' => '/{ApiVersion}/user',
+            'uri' => '/{ApiVersion}/users',
             'responseModel' => 'Result',
             'parameters' => [
                 'ApiVersion' => [
