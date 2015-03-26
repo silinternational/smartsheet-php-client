@@ -168,12 +168,18 @@
     'models' => [
         'User' => [
             'type' => 'object',
+            'properties' => [
+                'statusCode' => ['location' => 'statusCode']
+            ],
             'additionalProperties' => [
                 'location' => 'json'
             ]
         ],
         'Result' => [
             'type' => 'object',
+            'properties' => [
+                'statusCode' => ['location' => 'statusCode']
+            ],
             'additionalProperties' => [
                 'location' => 'json'
             ]
