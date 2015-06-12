@@ -14,6 +14,7 @@ use GuzzleHttp\Subscriber\Retry\RetrySubscriber;
  * @method array getCurrentUser(array $config = [])
  * @method array addUser(array $config = [])
  * @method array updateUser(array $config = [])
+ * @method array deleteUser(array $config = [])
  */
 class Client extends GuzzleClient
 {
