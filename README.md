@@ -13,7 +13,7 @@ Smartsheet supports User Generated Tokens or OAuth 2.0 for authorization. This c
 the User Generated Tokens method. Please see http://www.smartsheet.com/developers/api-documentation#h.y2e83x6xwscl for more information.
 
 # Install #
-Installation is simple with [Composer](https://getcomposer.org/). Add ```"silinternational/smartsheet-php-client", "dev-master"``` to your ```composer.json``` file and update.
+Installation is simple with [Composer](https://getcomposer.org/). Add ```"silinternational/smartsheet-php-client": "dev-master"``` to your ```composer.json``` file and update.
 
 # Usage #
 Example:
