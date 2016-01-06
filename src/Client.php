@@ -96,7 +96,7 @@ class Client extends GuzzleClient
         // Ensure that the credentials have been provided.
         if (!isset($config['access_token'])) {
             throw new \InvalidArgumentException(
-                'You must provide a Access Token.'
+                'You must provide an Access Token.'
             );
         }
 
