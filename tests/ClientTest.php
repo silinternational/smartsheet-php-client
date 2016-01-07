@@ -51,7 +51,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         // Call list users and make sure we get back the user we expect from mock
         $users = $client->listUsers();
 
-        $this->assertEquals(2, count($users));
+        $this->assertEquals(3, count($users));
 
         $this->assertEquals(3381623543621508,$users[0]['id']);
     }
@@ -87,7 +87,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         // Call list users and make sure we get back the user we expect from mock
         $users = $client->listUsers(['email' => 'test_user@domain.org']);
 
-        $this->assertEquals(1, count($users));
+        $this->assertEquals(2, count($users));
 
         $this->assertEquals(3381623543621508,$users[0]['id']);
     }
