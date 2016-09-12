@@ -39,7 +39,7 @@ $newUser = $client->addUser([
   "lastName" => "user",
   "admin" => false,
   "licensedSheetCreator" => false,
-  "resourceManager" => false,
+  "resourceViewer" => false,
 ]);
 
 echo $user['result']['id'];
