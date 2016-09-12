@@ -1,6 +1,6 @@
 <?php return [
     'baseUrl' => 'https://api.smartsheet.com',
-    'apiVersion' => '1.1',
+    'apiVersion' => '2.0',
     'operations' => [
         'ListUsers' => [
             'httpMethod' => 'GET',
@@ -21,7 +21,7 @@
         ],
         'GetUser' => [
             'httpMethod' => 'GET',
-            'uri' => '/{ApiVersion}/user/{id}',
+            'uri' => '/{ApiVersion}/users/{id}',
             'responseModel' => 'User',
             'parameters' => [
                 'ApiVersion' => [
@@ -38,7 +38,7 @@
         ],
         'GetCurrentUser' => [
             'httpMethod' => 'GET',
-            'uri' => '/{ApiVersion}/user/me',
+            'uri' => '/{ApiVersion}/users/me',
             'responseModel' => 'User',
             'parameters' => [
                 'ApiVersion' => [
@@ -83,7 +83,7 @@
                     'type' => 'string',
                     'location' => 'json'
                 ],
-                'resourceManager' => [
+                'resourceViewer' => [
                     'required' => false,
                     'type' => 'boolean',
                     'location' => 'json'
@@ -97,7 +97,7 @@
         ],
         'UpdateUser' => [
             'httpMethod' => 'PUT',
-            'uri' => '/{ApiVersion}/user/{id}',
+            'uri' => '/{ApiVersion}/users/{id}',
             'responseModel' => 'Result',
             'parameters' => [
                 'ApiVersion' => [
@@ -130,7 +130,7 @@
                     'type' => 'string',
                     'location' => 'json'
                 ],
-                'resourceManager' => [
+                'resourceViewer' => [
                     'required' => false,
                     'type' => 'boolean',
                     'location' => 'json'
@@ -139,7 +139,7 @@
         ],
         'DeleteUser' => [
             'httpMethod' => 'DELETE',
-            'uri' => '/{ApiVersion}/user/{id}',
+            'uri' => '/{ApiVersion}/users/{id}',
             'responseModel' => 'User',
             'parameters' => [
                 'ApiVersion' => [
@@ -157,10 +157,17 @@
                     'type' => 'string',
                     'location' => 'query',
                 ],
+                'transferSheets' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'location' => 'query',
+                    'enum' => ['true', 'false'],
+                ],
                 'removeFromSharing' => [
                     'required' => false,
-                    'type' => 'boolean',
+                    'type' => 'string',
                     'location' => 'query',
+                    'enum' => ['true', 'false'],
                 ],
             ]
         ]

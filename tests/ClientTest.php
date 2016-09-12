@@ -23,7 +23,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "admin" => 'false',
                 "licensedSheetCreator" => 'false',
                 "groupAdmin" => 'false',
-                "resourceManager" => 'false',
+                "resourceViewer" => 'false',
                 "id" => 3381623543621508,
                 "status" => "PENDING"
             ],
@@ -35,7 +35,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "admin" => 'false',
                 "licensedSheetCreator" => 'false',
                 "groupAdmin" => 'false',
-                "resourceManager" => 'false',
+                "resourceViewer" => 'false',
                 "id" => 3381623543621508,
                 "status" => "PENDING"
             ],
@@ -71,7 +71,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "admin" => 'false',
                 "licensedSheetCreator" => 'false',
                 "groupAdmin" => 'false',
-                "resourceManager" => 'false',
+                "resourceViewer" => 'false',
                 "id" => 3381623543621508,
                 "status" => "PENDING"
             ],
@@ -156,7 +156,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "lastName" => "user",
             "admin" => false,
             "licensedSheetCreator" => false,
-            "resourceManager" => false,
+            "resourceViewer" => false,
         ]);
 
         $this->assertEquals(7225516194326404,$user['result']['id']);
@@ -196,7 +196,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "lastName" => "user",
             "admin" => false,
             "licensedSheetCreator" => false,
-            "resourceManager" => false,
+            "resourceViewer" => false,
         ]);
 
         $this->assertEquals(7225516194326404,$user['result']['id']);
@@ -224,7 +224,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $user = $client->deleteUser([
             "id" => 7225516194326404,
             "transferTo" => 7225516194326411,
-            "removeFromSharing" => true,
+            "removeFromSharing" => 'true',
         ]);
 
         $this->assertEquals('SUCCESS',$user['message']);
