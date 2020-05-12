@@ -4,7 +4,6 @@ namespace Smartsheet;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Subscriber\Retry\RetrySubscriber;
 
 /**
  * Partial Smartsheet API client implemented with Guzzle.
@@ -25,24 +24,28 @@ class Client extends GuzzleClient
     {
         // Apply some defaults.
         $config += [
-            'max_retries'      => 3,
             'description_path' => __DIR__ . '/smartsheet-api.php',
         ];
+
+        // Ensure that the credentials are set.
+        $config = $this->applyCredentials($config);
 
         // Create the Smartsheet client.
         parent::__construct(
             $this->getHttpClientFromConfig($config),
             $this->getDescriptionFromConfig($config),
+            null,
+            null,
+            null,
             $config
         );
 
-        // Ensure that the credentials are set.
-        $this->applyCredentials($config);
-
         // Ensure that ApiVersion is set.
         $this->setConfig(
-            'defaults/ApiVersion',
-            $this->getDescription()->getApiVersion()
+            'defaults',
+            [
+                'ApiVersion' => $this->getDescription()->getApiVersion()
+            ]
         );
     }
 
@@ -58,15 +61,6 @@ class Client extends GuzzleClient
             ? $config['http_client_options']
             : [];
         $client = new HttpClient($clientOptions);
-
-        // Attach request retry logic.
-        $client->getEmitter()->attach(new RetrySubscriber([
-            'max' => $config['max_retries'],
-            'filter' => RetrySubscriber::createChainFilter([
-                RetrySubscriber::createStatusFilter(),
-                RetrySubscriber::createCurlFilter(),
-            ]),
-        ]));
 
         return $client;
     }
@@ -84,7 +78,7 @@ class Client extends GuzzleClient
             : null;
 
         // Override description from local config if set
-        if(isset($config['description_override'])){
+        if (isset($config['description_override'])) {
             $data = array_merge($data, $config['description_override']);
         }
 
@@ -99,10 +93,11 @@ class Client extends GuzzleClient
                 'You must provide an Access Token.'
             );
         }
-
-        // Set credentials for authentication based on Smartsheet's requirements.
-        $this->getHttpClient()->setDefaultOption('headers', [
+        $config['headers'] = [
             'Authorization' => 'Bearer '.$config['access_token'],
-        ]);
+        ];
+
+        // Return new config array with credentials for authentication based on Smartsheet's requirements.
+        return $config;
     }
 }
