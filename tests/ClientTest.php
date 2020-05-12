@@ -2,19 +2,15 @@
 namespace tests;
 
 use Smartsheet\Client;
-use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Response;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
     public function testListUsers()
     {
-        $config = include 'config-test.php';
-
-        $client = new Client($config);
-        
-        $mockBody = Stream::factory(json_encode([
+        $mockBody = json_encode([
             [
                 'email' => "test_11234545543@domain.org",
                 "name" => "test user",
@@ -39,14 +35,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "id" => 3381623543621508,
                 "status" => "PENDING"
             ],
-        ]));
-
-        $mock = new Mock([
-            new Response(200,[],$mockBody),
         ]);
 
-        // Add the mock subscriber to the client.
-        $client->getHttpClient()->getEmitter()->attach($mock);
+        $client = $this->getMockClient($mockBody);
 
         // Call list users and make sure we get back the user we expect from mock
         $users = $client->listUsers();
@@ -58,11 +49,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testListUserByEmail()
     {
-        $config = include 'config-test.php';
-
-        $client = new Client($config);
-
-        $mockBody = Stream::factory(json_encode([
+        $mockBody = json_encode([
             [
                 'email' => "test_11234545543@domain.org",
                 "name" => "test user",
@@ -75,14 +62,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "id" => 3381623543621508,
                 "status" => "PENDING"
             ],
-        ]));
-
-        $mock = new Mock([
-            new Response(200,[],$mockBody),
         ]);
 
-        // Add the mock subscriber to the client.
-        $client->getHttpClient()->getEmitter()->attach($mock);
+        $client = $this->getMockClient($mockBody);
 
         // Call list users and make sure we get back the user we expect from mock
         $users = $client->listUsers(['email' => 'test_user@domain.org']);
@@ -94,25 +76,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUser()
     {
-        $config = include 'config-test.php';
-
-        $client = new Client($config);
-
-        $mockBody = Stream::factory(json_encode([
+        $mockBody = json_encode([
                 'email' => "test_11234545543@domain.org",
                 "firstName" => "test",
                 "lastName" => "user",
                 "locale" => "en_US",
                 "timeZone" => "US/Pacific",
                 "id" => 3381623543621508,
-        ]));
-
-        $mock = new Mock([
-            new Response(200,[],$mockBody),
         ]);
 
-        // Add the mock subscriber to the client.
-        $client->getHttpClient()->getEmitter()->attach($mock);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->getUser(['id' => 3381623543621508]);
@@ -122,11 +95,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testAddUser()
     {
-        $config = include 'config-test.php';
-
-        $client = new Client($config);
-
-        $mockBody = Stream::factory(json_encode([
+        $mockBody = json_encode([
             "resultCode" => 0,
             "result" => [
                 "email" => "test_112345455433@domain.org",
@@ -139,14 +108,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "id" => 7225516194326404
             ],
             "message" => "SUCCESS",
-        ]));
-
-        $mock = new Mock([
-            new Response(200,[],$mockBody),
         ]);
 
-        // Add the mock subscriber to the client.
-        $client->getHttpClient()->getEmitter()->attach($mock);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->addUser([
@@ -164,11 +128,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateUser()
     {
-        $config = include 'config-test.php';
-
-        $client = new Client($config);
-
-        $mockBody = Stream::factory(json_encode([
+        $mockBody = json_encode([
             "resultCode" => 0,
             "result" => [
                 "firstName" => "test",
@@ -179,14 +139,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 "id" => 7225516194326404
             ],
             "message" => "SUCCESS",
-        ]));
-
-        $mock = new Mock([
-            new Response(200,[],$mockBody),
         ]);
 
-        // Add the mock subscriber to the client.
-        $client->getHttpClient()->getEmitter()->attach($mock);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->updateUser([
@@ -204,21 +159,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteUser()
     {
-        $config = include 'config-test.php';
-
-        $client = new Client($config);
-
-        $mockBody = Stream::factory(json_encode([
+        $mockBody = json_encode([
             "resultCode" => 0,
             "message" => "SUCCESS",
-        ]));
-
-        $mock = new Mock([
-            new Response(200,[],$mockBody),
         ]);
 
-        // Add the mock subscriber to the client.
-        $client->getHttpClient()->getEmitter()->attach($mock);
+        $client = $this->getMockClient($mockBody);
 
         // Call get user and make sure we get back the user we expect from mock
         $user = $client->deleteUser([
@@ -229,5 +175,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('SUCCESS',$user['message']);
 
+    }
+
+    private function getMockClient(string $mockBody, int $responseCode = 200) : Client
+    {
+        $config = include 'config-test.php';
+
+        $mockHandler = new MockHandler([
+            new Response($responseCode, [], $mockBody),
+        ]);
+
+        $handlerStack = HandlerStack::create($mockHandler);
+
+        return new Client(array_merge([
+            'http_client_options' => [
+                'handler' => $handlerStack,
+            ]
+        ], $config));
     }
 }
