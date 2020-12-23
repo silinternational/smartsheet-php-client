@@ -1,3 +1,5 @@
+# ⛔️ This repository is no longer maintained. ⛔️
+
 # smartsheet-php-client
 PHP client to interact with the Smartsheet API.
 
